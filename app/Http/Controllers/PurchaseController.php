@@ -30,7 +30,8 @@ class PurchaseController extends Controller
 
         $item->update(['stock' => $item->stock - $quantity]);
 
-        $user->update(['balance' => $user->balance - $total]);
+        $user->balance -= $total;
+        $user->save();
 
         Purchase::create([
             'user_id' => $user->id,

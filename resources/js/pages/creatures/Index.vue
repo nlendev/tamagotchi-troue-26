@@ -1,26 +1,26 @@
 <script setup>
-import { Form, Head, Link } from '@inertiajs/vue3';
-import { computed, onUnmounted, ref } from 'vue';
-import CreatureController from '@/actions/App/Http/Controllers/CreatureController';
-import FilmStrip from '@/components/FilmStrip.vue';
-import FitTitle from '@/components/FitTitle.vue';
-import GaugeCard from '@/components/GaugeCard.vue';
-import PageMasthead from '@/components/PageMasthead.vue';
-import PixelIcon from '@/components/PixelIcon.vue';
-import SectionHeading from '@/components/SectionHeading.vue';
-import TamagotchiDevice from '@/components/TamagotchiDevice.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { frameNumber } from '@/lib/format';
-import { moodOf, reactionOf } from '@/lib/mood';
-import { gauges, species } from '@/lib/species';
-import { dashboard, leaderboard } from '@/routes';
-import { create, edit } from '@/routes/creatures';
-import { index as shop } from '@/routes/shop';
+import { Form, Head, Link } from "@inertiajs/vue3";
+import { computed, onUnmounted, ref } from "vue";
+import CreatureController from "@/actions/App/Http/Controllers/CreatureController";
+import FilmStrip from "@/components/FilmStrip.vue";
+import FitTitle from "@/components/FitTitle.vue";
+import GaugeCard from "@/components/GaugeCard.vue";
+import PageMasthead from "@/components/PageMasthead.vue";
+import PixelIcon from "@/components/PixelIcon.vue";
+import SectionHeading from "@/components/SectionHeading.vue";
+import TamagotchiDevice from "@/components/TamagotchiDevice.vue";
+import TextLink from "@/components/TextLink.vue";
+import { Button } from "@/components/ui/button";
+import { frameNumber } from "@/lib/format";
+import { moodOf, reactionOf } from "@/lib/mood";
+import { gauges, species } from "@/lib/species";
+import { dashboard, leaderboard } from "@/routes";
+import { create, edit } from "@/routes/creatures";
+import { index as shop } from "@/routes/shop";
 
 defineOptions({
     layout: {
-        breadcrumbs: [{ title: 'Mon tamagotchi', href: dashboard() }],
+        breadcrumbs: [{ title: "Mon tamagotchi", href: dashboard() }],
         bleed: true,
     },
 });
@@ -61,11 +61,11 @@ onUnmounted(() => clearTimeout(reactionTimer));
 const mood = computed(() => {
     if (!creature.value) {
         return {
-            state: 'idle',
-            tone: 'lilac',
-            word: 'en attente',
-            headline: 'Votre enclos est vide. Adoptez une première créature.',
-            status: 'Un œuf attend au chaud.',
+            state: "idle",
+            tone: "lilac",
+            word: "en attente",
+            headline: "Votre enclos est vide. Adoptez une première créature.",
+            status: "Un œuf attend au chaud.",
         };
     }
 
@@ -74,12 +74,12 @@ const mood = computed(() => {
         : moodOf(creature.value);
 });
 
-const title = computed(() => creature.value?.name ?? 'Rien ici. Encore.');
+const title = computed(() => creature.value?.name ?? "Rien ici. Encore.");
 
 const fileCaption = computed(() =>
     creature.value
-        ? `Fiche n° ${frameNumber(creature.value.id)} · ${species[creature.value.species]?.label ?? 'Créature'}`
-        : 'Fiche vierge',
+        ? `Fiche n° ${frameNumber(creature.value.id)} · ${species[creature.value.species]?.label ?? "Créature"}`
+        : "Fiche vierge",
 );
 </script>
 
@@ -196,9 +196,14 @@ const fileCaption = computed(() =>
         >
             <SectionHeading id="film-title" title="Mes créatures">
                 <div class="flex flex-wrap gap-x-5">
-                    <TextLink :href="edit(creature.id)">
-                        Modifier la fiche
-                    </TextLink>
+                    <EnclosureCreatureTile :creature="creature" class="w-full">
+                        <TextLink
+                            v-if="creature.can.update"
+                            :href="edit(creature.id)"
+                        >
+                            Modifier
+                        </TextLink>
+                    </EnclosureCreatureTile>
                     <TextLink :href="create()">Adopter une créature</TextLink>
                 </div>
             </SectionHeading>

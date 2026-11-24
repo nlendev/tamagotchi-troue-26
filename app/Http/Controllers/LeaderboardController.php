@@ -14,7 +14,11 @@ class LeaderboardController extends Controller
             'creatures' => Creature::with('user')
                 ->orderByRaw('food + mood + energy desc')
                 ->take(10)
-                ->get(),
+                ->get()
+                ->map(fn (Creature $creature) => [
+                    ...$creature->only('id', 'name', 'species', 'food', 'mood', 'energy'),
+                    'user' => $creature->user->only('id', 'name'),
+                ]),
         ]);
     }
 }

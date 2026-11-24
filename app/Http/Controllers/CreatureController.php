@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCreatureRequest;
 use App\Models\Creature;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -37,49 +38,60 @@ class CreatureController extends Controller
         return to_route('dashboard');
     }
 
-    public function edit(Creature $creature): Response
-    {
-        return Inertia::render('creatures/Edit', [
-            'creature' => $creature->only('id', 'name', 'species', 'food', 'mood', 'energy'),
-        ]);
-    }
+public function edit(Creature $creature): Response
+{
+    Gate::authorize('update', $creature);
 
-    public function update(UpdateCreatureRequest $request, Creature $creature): RedirectResponse
-    {
-        $creature->update($request->validated());
+    return Inertia::render('creatures/Edit', [
+        'creature' => $creature->only('id', 'name', 'species', 'food', 'mood', 'energy'),
+    ]);
+}
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Créature renommée.']);
 
-        return to_route('creatures.edit', $creature);
-    }
+ public function update(UpdateCreatureRequest $request, Creature $creature): RedirectResponse
+{
+    Gate::authorize('update', $creature);
 
-    public function destroy(Creature $creature): RedirectResponse
-    {
-        $creature->delete();
+    $creature->update($request->validated());
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Créature relâchée.']);
+    Inertia::flash('toast', ['type' => 'success', 'message' => 'Créature renommée.']);
 
-        return to_route('dashboard');
-    }
+    return to_route('creatures.edit', $creature);
+}
 
-    public function play(Creature $creature): RedirectResponse
-    {
-        $creature->update([
-            'mood' => min(100, $creature->mood + 15),
-            'food' => max(0, $creature->food - 10),
-            'energy' => max(0, $creature->energy - 10),
-        ]);
+public function destroy(Creature $creature): RedirectResponse
+{
+    Gate::authorize('delete', $creature);
 
-        return back();
-    }
+    $creature->delete();
 
-    public function sleep(Creature $creature): RedirectResponse
-    {
-        $creature->update([
-            'energy' => min(100, $creature->energy + 25),
-            'food' => max(0, $creature->food - 5),
-        ]);
+    Inertia::flash('toast', ['type' => 'success', 'message' => 'Créature relâchée.']);
 
-        return back();
-    }
+    return to_route('dashboard');
+}
+
+public function play(Creature $creature): RedirectResponse
+{
+    Gate::authorize('update', $creature);
+
+    $creature->update([
+        'mood' => min(100, $creature->mood + 15),
+        'food' => max(0, $creature->food - 10),
+        'energy' => max(0, $creature->energy - 10),
+    ]);
+
+    return back();
+}
+
+public function sleep(Creature $creature): RedirectResponse
+{
+    Gate::authorize('update', $creature);
+
+    $creature->update([
+        'energy' => min(100, $creature->energy + 25),
+        'food' => max(0, $creature->food - 5),
+    ]);
+
+    return back();
+}
 }

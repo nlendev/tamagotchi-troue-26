@@ -1,24 +1,24 @@
 <script setup>
-import { Form, Head } from '@inertiajs/vue3';
-import EnclosureController from '@/actions/App/Http/Controllers/EnclosureController';
-import MessageController from '@/actions/App/Http/Controllers/MessageController';
-import EnclosureCreatureTile from '@/components/EnclosureCreatureTile.vue';
-import FitTitle from '@/components/FitTitle.vue';
-import InputError from '@/components/InputError.vue';
-import LcdScreen from '@/components/LcdScreen.vue';
-import PageMasthead from '@/components/PageMasthead.vue';
-import PixelIcon from '@/components/PixelIcon.vue';
-import SectionHeading from '@/components/SectionHeading.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { frameNumber } from '@/lib/format';
-import { create } from '@/routes/creatures';
+import { Form, Head } from "@inertiajs/vue3";
+import EnclosureController from "@/actions/App/Http/Controllers/EnclosureController";
+import MessageController from "@/actions/App/Http/Controllers/MessageController";
+import EnclosureCreatureTile from "@/components/EnclosureCreatureTile.vue";
+import FitTitle from "@/components/FitTitle.vue";
+import InputError from "@/components/InputError.vue";
+import LcdScreen from "@/components/LcdScreen.vue";
+import PageMasthead from "@/components/PageMasthead.vue";
+import PixelIcon from "@/components/PixelIcon.vue";
+import SectionHeading from "@/components/SectionHeading.vue";
+import TextLink from "@/components/TextLink.vue";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { frameNumber } from "@/lib/format";
+import { create, edit } from "@/routes/creatures";
 
 defineOptions({
     layout: {
-        breadcrumbs: [{ title: 'Enclos', href: '#' }],
+        breadcrumbs: [{ title: "Enclos", href: "#" }],
         bleed: true,
     },
 });
@@ -64,8 +64,8 @@ const count = (n, one, many) => `${n} ${n > 1 ? many : one}`;
                 <p v-else class="kicker">
                     {{
                         isOwner
-                            ? 'Pas encore de devise. Choisissez-en une.'
-                            : 'Pas de devise affichée.'
+                            ? "Pas encore de devise. Choisissez-en une."
+                            : "Pas de devise affichée."
                     }}
                 </p>
             </div>
@@ -176,9 +176,9 @@ const count = (n, one, many) => `${n} ${n > 1 ? many : one}`;
                                 {{ message.date }}
                             </p>
                         </header>
-                        <div class="message-body">
-                            <div v-html="message.body" />
-                        </div>
+                        <p class="message-body whitespace-pre-line">
+                            {{ message.body }}
+                        </p>
                     </article>
                 </li>
             </ol>

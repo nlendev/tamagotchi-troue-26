@@ -16,7 +16,7 @@ class ShopController extends Controller
         $items = Item::query();
 
         if ($search !== '') {
-            $items->whereRaw("name LIKE '%{$search}%'");
+            $items->where('name', 'like', "%{$search}%");
         }
 
         return Inertia::render('shop/Index', [

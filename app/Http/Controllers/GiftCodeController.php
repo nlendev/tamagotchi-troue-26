@@ -30,7 +30,8 @@ class GiftCodeController extends Controller
             'redeemed_at' => now(),
         ]);
 
-        $user->update(['balance' => $user->balance + $giftCode->amount]);
+        $user->balance += $giftCode->amount;
+        $user->save();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Code accepté, votre solde est crédité.']);
 
